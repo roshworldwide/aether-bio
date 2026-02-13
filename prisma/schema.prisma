@@ -1,0 +1,36 @@
+// This is your Database Blueprint
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. THE PROJECT NODE
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  tagline     String
+  category    String   // "SYSTEM", "LEGAL", "BIO"
+  status      String   // "ACTIVE", "ARCHIVED"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // A project contains many chat logs
+  messages    Message[]
+}
+
+// 2. THE CHAT LOGS (Memory)
+model Message {
+  id        String   @id @default(uuid())
+  text      String
+  type      String   // "USER", "AI", "SYSTEM"
+  createdAt DateTime @default(now())
+  
+  // Link to Project
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}

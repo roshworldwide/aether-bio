@@ -1,26 +1,149 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --accent: #f5c16c; /* base gold */
+  --accent-rose: #f3b3a6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --foreground-rgb: 255, 255, 255;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background: black;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide Scrollbar */
+::-webkit-scrollbar { width: 0px; background: transparent; }
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scaleY(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes gold-flow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 300%;
+  }
+}
+
+.gold-flow {
+  background: linear-gradient(
+    180deg,
+    #4a2c00,
+    #cfa14a,
+    #fff3c4,
+    #e6b566,
+    #4a2c00
+  );
+  background-size: 100% 300%;
+  animation: gold-flow 6s linear infinite;
+}
+
+.gold-glow {
+  filter:
+    drop-shadow(0 0 6px rgba(245,193,108,0.6))
+    drop-shadow(0 0 18px rgba(245,193,108,0.4))
+    drop-shadow(0 0 36px rgba(245,193,108,0.25));
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               "SF Pro Text", Inter, system-ui, sans-serif;
+}
+
+@keyframes gold-flicker {
+  0%   { opacity: 0.6 }
+  50%  { opacity: 1 }
+  100% { opacity: 0.65 }
+}
+
+.gold-line {
+  animation:
+    gold-flow 6s linear infinite,
+    gold-flicker 2.5s ease-in-out infinite;
+}
+
+.signature-text {
+  text-shadow:
+    0 0 6px rgba(245,193,108,0.4),
+    0 2px 4px rgba(0,0,0,0.35);
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg ... %3E");
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+}
+
+.engineered-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+
+  background: linear-gradient(
+    180deg,
+    #7a5a2a,
+    #e6c27a,
+    #fff1c1,
+    #cfa85a,
+    #7a5a2a
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  opacity: 0.65;
+
+  text-shadow:
+    0 1px 1px rgba(0,0,0,0.35);
+}
+
+@keyframes micro-shine {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 0% 150%; }
+}
+
+.engineered-label {
+  background-size: 100% 150%;
+  animation: micro-shine 14s linear infinite;
+}
+
+.engineered-label {
+  transform: translateY(-2px);
+}
+
+.engineered-white {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+
+  color: rgba(255, 255, 255, 0.75);
+
+  /* Subtle physical depth (not glow) */
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.35);
+
+  transform: translateY(-1px);
 }
