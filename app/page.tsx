@@ -12,11 +12,9 @@ function AppContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isForging, setIsForging] = useState(false);
   
-  // Track focus state for the sleek transition
   const [isFieldFocused, setIsFieldFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // --- PHYSICS ENGINE ---
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springX = useSpring(mouseX, { stiffness: 45, damping: 25 });
@@ -62,7 +60,6 @@ function AppContent() {
             }}
             className="z-10 w-full h-full flex flex-col items-center justify-center px-4 relative"
         >
-            {/* --- THE POWER SPINE --- */}
             <motion.div 
                style={{ z: -50 }} 
                className="absolute right-12 top-0 h-full flex flex-col items-center justify-center z-50 select-none mix-blend-screen opacity-80"
@@ -106,28 +103,24 @@ function AppContent() {
                             </p>
                         </div>
 
-                        {/* --- THE SLEEK BIOMETRIC SLOT --- */}
                         <div className="w-[340px] md:w-[420px] space-y-8">
                              <div className="relative">
                                 <label className={`block text-center text-[9px] tracking-[0.4em] uppercase mb-4 font-bold transition-colors duration-500 ${isFieldFocused ? 'text-white' : 'text-white/50'}`}>
                                   {isFieldFocused ? "Enter Identity Token" : "Authentication Required"}
                                 </label>
                                 
-                                {/* The Slim Ingot Container (h-14 / 56px) */}
                                 <div 
                                     onClick={handleContainerClick}
                                     className={`relative h-14 rounded-[20px] backdrop-blur-2xl border transition-all duration-500 overflow-hidden cursor-text shadow-[0_0_40px_rgba(0,0,0,0.5)] ${
                                     isFieldFocused 
-                                    ? 'bg-white/[0.12] border-white/40' // Revealed
-                                    : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.07] hover:border-white/20' // Sealed
+                                    ? 'bg-white/[0.12] border-white/40'
+                                    : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.07] hover:border-white/20'
                                 }`}>
                                     
-                                    {/* 1. THE INPUT FIELD */}
                                     <input 
                                         ref={inputRef}
                                         type="password" 
                                         onFocus={() => setIsFieldFocused(true)}
-                                        // FIXED: We don't force blur immediately, keeping the UI stable
                                         onBlur={(e) => {
                                           if (e.target.value === "") setIsFieldFocused(false);
                                         }}
@@ -136,7 +129,6 @@ function AppContent() {
                                         }`}
                                     />
 
-                                    {/* 2. THE "LOCKED" SHUTTER */}
                                     <div className={`absolute inset-0 flex items-center justify-center z-20 bg-white/[0.02] backdrop-blur-[2px] transition-all duration-300 pointer-events-none ${
                                         isFieldFocused ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
                                     }`}>
@@ -146,15 +138,12 @@ function AppContent() {
                                         </div>
                                     </div>
                                     
-                                    {/* REMOVED: The "Bottom Glow Bar" (The shadow artifact is gone) */}
                                 </div>
                              </div>
 
                              <div className="flex justify-center">
-                                {/* FIXED: Button is no longer disabled by focus state logic */}
                                 <button 
                                     onClick={() => setIsLoggedIn(true)}
-                                    // Use onMouseDown to prevent focus loss before click registers
                                     onMouseDown={(e) => e.preventDefault()} 
                                     className="px-16 py-5 text-[10px] tracking-[0.3em] text-black bg-white hover:scale-[1.02] active:scale-[0.98] rounded-full transition-all duration-500 uppercase font-black shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)] opacity-100"
                                 >

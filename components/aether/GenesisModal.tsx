@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface GenesisModalProps {
   onClose: () => void;
-  // UPDATE: Change from "() => void" to "(title: string) => void"
   onSuccess: (title: string) => void; 
 }
 
@@ -13,9 +12,8 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
   const [step, setStep] = useState(0);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [history, setHistory] = useState<string[]>([]); // Conversation history
+  const [history, setHistory] = useState<string[]>([]);
   
-  // THE AI PERSONA
   const prompts = [
     "NEURAL LINK ESTABLISHED.",
     "IDENTIFY PROJECT VECTOR...",
@@ -35,9 +33,8 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
       }, 1500);
     } else if (step === prompts.length - 1) {
        timeout = setTimeout(() => {
-         // EXTRACT USER INPUT: Find the line starting with ">"
          const userTitle = history.find(line => line.startsWith('> '))?.replace('> ', '') || "UNKNOWN PROJECT";
-         onSuccess(userTitle.toUpperCase()); // Send data to parent
+         onSuccess(userTitle.toUpperCase());
          onClose();
        }, 2000);
     }
@@ -47,9 +44,9 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && input.trim()) {
-      setHistory(prev => [...prev, `> ${input}`]); // Add user input to history
+      setHistory(prev => [...prev, `> ${input}`]);
       setInput('');
-      setStep(prev => prev + 1); // Move to next AI prompt
+      setStep(prev => prev + 1);
     }
   };
 
@@ -62,7 +59,6 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
          initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
          className="w-full max-w-3xl min-h-[400px] bg-[#050505] border border-white/10 rounded-[40px] shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col relative"
       >
-         {/* HEADER */}
          <div className="h-16 border-b border-white/10 flex items-center justify-between px-8 bg-white/[0.02]">
             <div className="flex gap-2">
                <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
@@ -73,9 +69,7 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
             <button onClick={onClose} className="text-[10px] text-white/20 hover:text-white uppercase tracking-widest transition-colors">Abort</button>
          </div>
 
-         {/* TERMINAL BODY */}
          <div className="flex-1 p-10 font-mono text-sm space-y-4 overflow-y-auto">
-            {/* HISTORY LOG */}
             {history.map((line, i) => (
                <motion.div 
                  key={i} 
@@ -86,7 +80,6 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
                </motion.div>
             ))}
 
-            {/* CURRENT AI ACTIVITY */}
             {isTyping && (
                <div className="text-green-500 flex items-center gap-2">
                   <span className="w-2 h-4 bg-green-500 animate-pulse" />
@@ -94,7 +87,6 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
                </div>
             )}
 
-            {/* USER INPUT FIELD (Only shows at Step 1) */}
             {step === 1 && (
                <motion.div 
                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -114,7 +106,6 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
             )}
          </div>
 
-         {/* FOOTER DECORATION */}
          <div className="h-12 border-t border-white/5 bg-black flex items-center justify-between px-8">
              <div className="flex gap-4">
                 <span className="text-[9px] text-white/20 uppercase tracking-[0.3em]">CPU: 12%</span>
@@ -123,7 +114,6 @@ export default function GenesisModal({ onClose, onSuccess }: GenesisModalProps) 
              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#00ff00]" />
          </div>
          
-         {/* SCANLINE OVERLAY */}
          <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))]" style={{ backgroundSize: "100% 2px, 3px 100%" }} />
       </motion.div>
     </motion.div>

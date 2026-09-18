@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --accent: #f5c16c; /* base gold */
+  --accent: #f5c16c;
   --accent-rose: #f3b3a6;
 }
 
@@ -18,7 +18,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide Scrollbar */
 ::-webkit-scrollbar { width: 0px; background: transparent; }
 
 @keyframes pulse {
@@ -141,7 +140,6 @@ body {
 
   color: rgba(255, 255, 255, 0.75);
 
-  /* Subtle physical depth (not glow) */
   text-shadow:
     0 1px 1px rgba(0, 0, 0, 0.35);
 

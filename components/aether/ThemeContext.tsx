@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { THEMES, DEFAULT_THEME } from '../../aether.config';
 
-// Define the shape of our "Brain"
 type ThemeType = typeof DEFAULT_THEME;
 type ThemeContextType = {
   currentTheme: ThemeType;
@@ -26,7 +25,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// A hook to let any component access the Brain
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) throw new Error("useTheme must be used within a ThemeProvider");

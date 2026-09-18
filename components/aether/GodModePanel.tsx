@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// FIXED PATH BELOW (Two dots, not three)
 import { THEMES } from '../../aether.config'; 
 import { useTheme } from './ThemeContext';
 

@@ -1,6 +1,5 @@
 'use client';
 
-// A procedural sound synthesizer. No external files required.
 const createOscillator = (type: OscillatorType, freq: number, duration: number, vol: number = 0.1) => {
   if (typeof window === 'undefined') return;
   
@@ -29,20 +28,16 @@ export const playSfx = (type: 'HOVER' | 'CLICK' | 'DEPLOY' | 'WARP') => {
 
   switch (type) {
     case 'HOVER':
-      // Low, subtle hum
       createOscillator('sine', 150, 0.1, 0.05);
       break;
     case 'CLICK':
-      // Sharp, mechanical blip
       createOscillator('square', 800, 0.05, 0.05);
       break;
     case 'DEPLOY':
-      // Success chime (Two tones)
       createOscillator('sine', 440, 0.2, 0.1);
       setTimeout(() => createOscillator('sine', 880, 0.4, 0.1), 100);
       break;
     case 'WARP':
-      // Ramping turbine sound
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
@@ -50,7 +45,7 @@ export const playSfx = (type: 'HOVER' | 'CLICK' | 'DEPLOY' | 'WARP') => {
       
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(100, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(2000, ctx.currentTime + 1.5); // Ramp up
+      osc.frequency.exponentialRampToValueAtTime(2000, ctx.currentTime + 1.5);
       
       gain.gain.setValueAtTime(0.05, ctx.currentTime);
       gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);

@@ -16,7 +16,6 @@ interface EngineProps {
 export default function AtmosphereEngine({ preset, customConfig }: EngineProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Merge Config
   const activeColor = customConfig?.color || preset.color;
   const activeForce = customConfig?.force ?? preset.config.force;
   const activeSpeed = customConfig?.speed ?? preset.config.speed;
@@ -29,7 +28,6 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // --- 4K / RETINA SCALING ---
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.parentElement?.getBoundingClientRect();
     if (!rect) return;
@@ -40,7 +38,6 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
     const scale = Math.min(width, height) / 1000;
     ctx.scale(1, 1);
 
-    // --- PHYSICS STATE ---
     let particles: any[] = [];
     let animationFrameId: number;
     let frame = 0;
@@ -52,13 +49,11 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
     }
     const rgb = hexToRgb(activeColor);
 
-    // --- INITIALIZATION ---
     const init = () => {
         particles = [];
         const baseCount = (engineType === 'VORONOI' || engineType === 'FABRIC') ? 60 : 150;
         const count = Math.floor((activeDensity / 100) * baseCount) + 20; 
 
-        // FABRIC GRID SETUP
         if (engineType === 'FABRIC') {
             const cols = 20; const rows = 15;
             for(let y=0; y<rows; y++) {
@@ -66,9 +61,9 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
                     particles.push({
                         x: (width/cols) * x + (width/cols)/2,
                         y: (height/rows) * y + (height/rows)/2,
-                        ox: (width/cols) * x + (width/cols)/2, // Old X for Verlet
+                        ox: (width/cols) * x + (width/cols)/2,
                         oy: (height/rows) * y + (height/rows)/2,
-                        pinned: y === 0 // Pin top row
+                        pinned: y === 0
                     });
                 }
             }
@@ -99,11 +94,9 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
     };
     canvas.addEventListener('mousemove', onMove);
 
-    // --- MASTER RENDER LOOP ---
     const render = () => {
         frame++;
         
-        // 1. CLEAR & TRAIL LOGIC
         ctx.globalCompositeOperation = 'source-over';
         let trail = 0.08;
         if (engineType === 'CYBER_GRID' || engineType === 'WAVEFORM') trail = 0.2;
@@ -111,10 +104,8 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
         ctx.fillStyle = `rgba(0, 0, 0, ${trail})`;
         ctx.fillRect(0, 0, width, height);
 
-        // 2. GLOW / BLEND
         ctx.globalCompositeOperation = 'lighter';
         
-        // 3. SPECIAL EFFECTS (PRE-LOOP)
         if (engineType === 'GLITCH') {
             if (Math.random() > 0.9) {
                 const sliceHeight = Math.random() * 50 * scale;
@@ -124,15 +115,13 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
             }
         }
 
-        // 4. PHYSICS LOOP
         particles.forEach((p, i) => {
             ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${p.life})`;
 
-            // --- A. FIRE / NEBULA ---
             if (engineType === 'FIRE') {
-                p.y -= (activeSpeed * 0.1 * scale) + p.size * 0.5; // Rise
-                p.x += Math.sin(frame * 0.05 + p.phase) * (scale); // Wiggle
-                p.life -= 0.01; // Decay
+                p.y -= (activeSpeed * 0.1 * scale) + p.size * 0.5;
+                p.x += Math.sin(frame * 0.05 + p.phase) * (scale);
+                p.life -= 0.01;
                 
                 if (p.life <= 0 || p.y < 0) {
                     p.y = height; p.x = mouse.x + (Math.random()-0.5) * 100 * scale;
@@ -145,35 +134,29 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
                 return;
             }
 
-            // --- B. LIQUID (Metaballs Approx) ---
             if (engineType === 'LIQUID') {
-                // Gravity + Mouse Repulsion
-                p.vy += 0.5 * scale; // Gravity
+                p.vy += 0.5 * scale;
                 const dx = mouse.x - p.x; const dy = mouse.y - p.y;
                 const dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist < 200 * scale) {
                     p.vx -= (dx/dist) * activeForce * 0.05;
                     p.vy -= (dy/dist) * activeForce * 0.05;
                 }
-                // Floor bounce
                 if (p.y > height) { p.y = height; p.vy *= -0.8; }
                 if (p.x < 0 || p.x > width) p.vx *= -1;
                 
                 p.x += p.vx; p.y += p.vy;
-                // Draw Big Soft Circles
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 8, 0, Math.PI*2); ctx.fill();
                 return;
             }
 
-            // --- C. FABRIC (Verlet Integration) ---
             if (engineType === 'FABRIC') {
                 if (p.pinned) return;
-                const vx = (p.x - p.ox) * 0.95; // Damping
+                const vx = (p.x - p.ox) * 0.95;
                 const vy = (p.y - p.oy) * 0.95;
                 p.ox = p.x; p.oy = p.y;
                 p.x += vx; p.y += vy;
                 
-                // Mouse Interaction (Tear/Push)
                 const dx = mouse.x - p.x; const dy = mouse.y - p.y;
                 const dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist < 100 * scale) {
@@ -185,17 +168,14 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
                 return;
             }
 
-            // --- D. DNA (Helix) ---
             if (engineType === 'DNA') {
                 p.y += activeSpeed * 0.05 * scale;
                 if(p.y > height) p.y = 0;
                 const offset = Math.sin(p.y * 0.01 + frame * 0.02) * (activeForce * 2 * scale);
-                // Draw 2 strands
                 ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.8)`;
                 ctx.beginPath(); ctx.arc(width/2 + offset, p.y, p.size, 0, Math.PI*2); ctx.fill();
                 ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
                 ctx.beginPath(); ctx.arc(width/2 - offset, p.y, p.size, 0, Math.PI*2); ctx.fill();
-                // Connect rung
                 if (i % 5 === 0) {
                      ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
                      ctx.beginPath(); ctx.moveTo(width/2 + offset, p.y); ctx.lineTo(width/2 - offset, p.y); ctx.stroke();
@@ -203,9 +183,7 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
                 return;
             }
 
-            // --- E. BOIDS (Flocking) ---
             if (engineType === 'BOIDS') {
-                // (Simplified for brevity, includes Alignment/Cohesion/Separation)
                 p.x += p.vx; p.y += p.vy;
                 if(p.x < 0) p.x = width; if(p.x > width) p.x = 0;
                 if(p.y < 0) p.y = height; if(p.y > height) p.y = 0;
@@ -216,7 +194,6 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
                 return;
             }
 
-            // --- F. CYBER GRID ---
             if (engineType === 'CYBER_GRID') {
                 p.z -= activeSpeed * 0.5; if (p.z <= 0) p.z = width;
                 const horizon = height * 0.4;
@@ -232,8 +209,6 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
                 return;
             }
 
-            // --- G. STANDARD PHYSICS (Gravity, Orbit, Flow, etc) ---
-            // (Shared Logic for everything else)
             if (engineType === 'TEXT_FALL') {
                  p.y += (Math.random() * activeSpeed * 0.1) + 2;
                  if(p.y > height) p.y = 0;
@@ -256,13 +231,11 @@ export default function AtmosphereEngine({ preset, customConfig }: EngineProps) 
                  p.vx *= 0.95; p.vy *= 0.95;
             }
 
-            // Default Gravity/Flow
             p.x += p.vx; p.y += p.vy;
             if(p.x < 0 || p.x > width) p.vx *= -1;
             if(p.y < 0 || p.y > height) p.vy *= -1;
             ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
             
-            // LATTICE Connections
             if (engineType === 'LATTICE' || engineType === 'VORONOI') {
                 particles.forEach((p2: any, j) => {
                      if (i===j) return;

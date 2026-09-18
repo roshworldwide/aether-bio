@@ -15,7 +15,6 @@ export default function NebulaInput({
   return (
     <div className="relative w-full group">
       
-      {/* 1. THE CONTAINER (Dark & Carved, not glowing) */}
       <motion.div 
         animate={{
             borderColor: isFocused ? "rgba(34, 211, 238, 0.4)" : "rgba(255, 255, 255, 0.1)",
@@ -25,7 +24,6 @@ export default function NebulaInput({
         className="relative overflow-hidden rounded-xl bg-black/20 border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]"
       >
         
-        {/* 2. THE SCAN LINE (Barely visible whisper of light) */}
         {isFocused && (
           <motion.div
             initial={{ x: '-100%', opacity: 0 }}
@@ -40,7 +38,6 @@ export default function NebulaInput({
           />
         )}
 
-        {/* 3. THE INPUT (Pure Text) */}
         <input
           type={type}
           placeholder={placeholder}
@@ -59,7 +56,6 @@ export default function NebulaInput({
           }}
         />
         
-        {/* 4. THE BOTTOM ACCENT (Precision Line) */}
         <motion.div 
             animate={{ 
                 width: isFocused ? "100%" : "0%", 

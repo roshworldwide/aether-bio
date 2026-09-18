@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Initialize the Brain
-// PASTE YOUR REAL KEY INSIDE THE QUOTES
 const genAI = new GoogleGenerativeAI("AIzaSyB-9ojzKqxi3QZQ8-OeVALzK9IMFPYngr4");
 
 export async function POST(req: Request) {
@@ -10,10 +8,8 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { message, projectTitle } = body;
 
-    // UPGRADE: Switched from 'gemini-pro' to 'gemini-1.5-flash'
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // 2. Engineer the "System Prompt" (The Personality)
     const systemInstruction = `
       You are an advanced AI interface for a project named "${projectTitle}".
       
@@ -29,7 +25,6 @@ export async function POST(req: Request) {
       - Do not sound like a standard chatbot. Be the SYSTEM.
     `;
 
-    // 3. Send the transmission
     const result = await model.generateContent(`${systemInstruction}\n\nUSER INPUT: ${message}`);
     const response = await result.response;
     const text = response.text();

@@ -1,6 +1,3 @@
-// data/AtmosphereRegistry.ts
-
-// The "Titan" Engine supports all these, but we are only exposing 6 for the MVP.
 export type EngineType = 
   | 'GRAVITY' | 'VELOCITY' | 'LATTICE' | 'TEXT_FALL' | 'FLOW' 
   | 'ORBIT' | 'NOISE' | 'BOIDS' | 'CYBER_GRID' | 'WAVEFORM' 
@@ -12,19 +9,17 @@ export interface ThemePreset {
   engine: EngineType;
   color: string;
   config: { 
-    force: number;   // Interaction Strength
-    speed: number;   // Motion Speed
-    density: number; // Particle Count
-    glow: number;    // Bloom Intensity
-    radius: number;  // UI Corner Radius
+    force: number;
+    speed: number;
+    density: number;
+    glow: number;
+    radius: number;
   };
   premium: boolean;
 }
 
-// --- THE ALPHA 6 (LAUNCH COLLECTION) ---
 export const CENTURY_ARCHIVE: ThemePreset[] = [
   
-  // 1. THE CLASSIC (Clean, Minimal Apple Look)
   { 
     id: '001', 
     name: 'Singularity Prime', 
@@ -34,7 +29,6 @@ export const CENTURY_ARCHIVE: ThemePreset[] = [
     premium: false 
   },
 
-  // 2. THE SPEED (High Energy)
   { 
     id: '002', 
     name: 'Hyperdrive', 
@@ -44,7 +38,6 @@ export const CENTURY_ARCHIVE: ThemePreset[] = [
     premium: false 
   },
 
-  // 3. THE HACKER (Developer Favorite)
   { 
     id: '003', 
     name: 'Matrix Rain', 
@@ -54,7 +47,6 @@ export const CENTURY_ARCHIVE: ThemePreset[] = [
     premium: false 
   },
 
-  // 4. THE NETWORK (Biology/Tech Hybrid)
   { 
     id: '004', 
     name: 'Neural Lattice', 
@@ -64,21 +56,19 @@ export const CENTURY_ARCHIVE: ThemePreset[] = [
     premium: false 
   },
 
-  // 5. THE DARK MODE (Subtle Background)
   { 
     id: '005', 
     name: 'Deep Void', 
-    engine: 'GRAVITY', // Using GRAVITY with low speed behaves like NOISE
+    engine: 'GRAVITY',
     color: '#111111', 
     config: { force: 10, speed: 5, density: 90, glow: 0.5, radius: 0 }, 
     premium: false 
   },
 
-  // 6. THE FLOW (Liquid/Wind)
   { 
     id: '006', 
     name: 'Solar Wind', 
-    engine: 'QUANTUM_FLUX', // Upgraded from 'FLOW' to 'FLUX' for better physics
+    engine: 'QUANTUM_FLUX',
     color: '#FF9F0A', 
     config: { force: 60, speed: 40, density: 50, glow: 2.5, radius: 30 }, 
     premium: false 

@@ -17,7 +17,6 @@ export default function GlassCockpit({ onForgeStateChange }: GlassCockpitProps) 
   const [isGenerating, setIsGenerating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-// --- DATABASE UPLINK (READ) ---
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -27,7 +26,6 @@ export default function GlassCockpit({ onForgeStateChange }: GlassCockpitProps) 
         const data = await res.json();
         
         if (Array.isArray(data)) {
-            // Map Database fields to UI Interface
             const formattedProjects = data.map((p: any) => ({
                id: p.id,
                title: p.title,
@@ -36,7 +34,7 @@ export default function GlassCockpit({ onForgeStateChange }: GlassCockpitProps) 
                status: p.status,
                activeUsers: "0",
                lastUpdate: p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "Just now"
-            })) as unknown as ProjectDNA[]; // <--- THE NUCLEAR FIX (Double Cast)
+            })) as unknown as ProjectDNA[];
             
             setProjects(formattedProjects);
         }
@@ -49,9 +47,7 @@ console.error("CRITICAL FAILURE:", error);      } finally {
     fetchProjects();
   }, []);
 
-  // --- DATABASE UPLINK (WRITE) ---
   const handleAddProject = async (title: string) => {
-    // FIX: Prefix ID with "temp_" to prevent DOM Selector crashes
     const tempId = `temp-${Date.now()}`;
     
     const optimisticProject = {
@@ -64,10 +60,8 @@ console.error("CRITICAL FAILURE:", error);      } finally {
       lastUpdate: "Just now"
     } as any as ProjectDNA;
 
-    // 1. Show immediately (Optimistic UI)
     setProjects(prev => [optimisticProject, ...prev]);
 
-    // 2. Send to "The Iron Man Suit" (Database)
     try {
       const res = await fetch('/api/projects', {
         method: 'POST',
@@ -79,7 +73,6 @@ console.error("CRITICAL FAILURE:", error);      } finally {
 
       const savedProject = await res.json();
       
-      // 3. Update with real ID from Database
       setProjects(prev => prev.map(p => 
         p.id === tempId ? { 
             ...p, 
@@ -90,7 +83,6 @@ console.error("CRITICAL FAILURE:", error);      } finally {
       
     } catch (error) {
       console.error("WRITE FAILED", error);
-      // Optional: Remove the project if save failed
       setProjects(prev => prev.filter(p => p.id !== tempId));
     }
   };
@@ -101,7 +93,6 @@ console.error("CRITICAL FAILURE:", error);      } finally {
         {!selectedProject ? (
           <motion.div key="registry" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.98 }}>
             
-            {/* HEADER */}
             <div className="mb-16 border-l-[1px] border-white pl-8">
               <h2 className="text-6xl font-black tracking-tighter text-white uppercase italic">
                 Neural Forge <span className="text-white/20 not-italic">X</span>
@@ -120,7 +111,6 @@ console.error("CRITICAL FAILURE:", error);      } finally {
               </div>
             </div>
 
-            {/* GRID */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32">
               {projects.map((p, index) => (
                 <ProjectCard 
@@ -143,7 +133,6 @@ console.error("CRITICAL FAILURE:", error);      } finally {
         )}
       </AnimatePresence>
 
-      {/* GENESIS MODAL */}
       <AnimatePresence>
         {isGenerating && (
           <GenesisModal 

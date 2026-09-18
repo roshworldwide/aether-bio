@@ -19,7 +19,7 @@ interface PhysicsConfig {
   viscosity: number;
   size: number;     
   speed: number;
-  color?: string; // NEW: The Spectral Wavelength
+  color?: string;
 }
 
 interface FluidBackgroundProps {
@@ -34,12 +34,11 @@ export default function FluidBackground({ isForging = false, config }: FluidBack
   const DRAG = config?.viscosity ?? 0.92;
   const BASE_SIZE = config?.size ?? 1.2;
   const SPEED_MOD = config?.speed ?? 1.0;
-  const COLOR = config?.color ?? '#FFFFFF'; // Default to Photon White
+  const COLOR = config?.color ?? '#FFFFFF';
   
   const SPACING = 28;
   const EASE = 0.08;
 
-  // Helper to convert Hex to RGB for opacity handling
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 255, 255';
@@ -99,7 +98,6 @@ export default function FluidBackground({ isForging = false, config }: FluidBack
     };
 
     const render = () => {
-      // CLEAR
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, parentWidth, parentHeight);
       
@@ -141,7 +139,6 @@ export default function FluidBackground({ isForging = false, config }: FluidBack
         ctx.fillStyle = `rgba(${RGB_COLOR}, ${alpha})`;
         ctx.fill();
 
-        // CHROMATIC GLOW: Add bloom to larger particles if color is not white
         if (COLOR !== '#FFFFFF' && p.size > 2) {
            ctx.shadowColor = COLOR;
            ctx.shadowBlur = 15;

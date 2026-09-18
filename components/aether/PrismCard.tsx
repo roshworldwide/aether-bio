@@ -23,13 +23,10 @@ export default function PrismCard({
         group
       "
     >
-      {/* 1. The Shimmer Layer (Holographic reflection) */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
       
-      {/* 2. The Border Glow (Subtle gradient on edge) */}
       <div className="absolute inset-0 rounded-3xl border border-white/5 mask-image-gradient-to-b" />
 
-      {/* 3. The Header (Optional) */}
       {title && (
         <div className="mb-6 border-b border-white/10 pb-4">
           <h2 className="text-xl font-light tracking-[0.2em] text-cyan-100/80 uppercase">
@@ -38,7 +35,6 @@ export default function PrismCard({
         </div>
       )}
 
-      {/* 4. The Content Slot */}
       <div className="relative z-10 text-cyan-50/90 font-light leading-relaxed">
         {children}
       </div>

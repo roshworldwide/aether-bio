@@ -13,7 +13,7 @@ interface RuntimeProps {
 }
 
 interface Message {
-  id: string; // CHANGED: 'number' to 'string' to support better IDs
+  id: string;
   type: 'SYSTEM' | 'USER' | 'AI';
   text: string;
 }
@@ -24,7 +24,6 @@ export default function RuntimeOS({ config, onExit }: RuntimeProps) {
   const [isThinking, setIsThinking] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // INITIAL BOOT SEQUENCE
   useEffect(() => {
     const bootSequence = [
       "ESTABLISHING SECURE UPLINK...",
@@ -34,35 +33,29 @@ export default function RuntimeOS({ config, onExit }: RuntimeProps) {
     
     bootSequence.forEach((msg, i) => {
       setTimeout(() => {
-        // FIX: Use random string for ID to prevent collision
         const uniqueId = `${Date.now()}-${Math.random()}`; 
         setMessages(prev => [...prev, { id: uniqueId, type: 'SYSTEM', text: msg }]);
       }, i * 800);
     });
   }, []);
 
-  // AUTO-SCROLL TO BOTTOM
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // --- THE TRANSMISSION PROTOCOL ---
   const handleSend = async () => {
     if (!input.trim()) return;
 
     const userText = input;
-    setInput(''); // Clear field
+    setInput('');
     
-    // 1. ADD USER MESSAGE LOCALLY
-    // FIX: Unique ID
     const userId = `${Date.now()}-user`;
     setMessages(prev => [...prev, { id: userId, type: 'USER', text: userText }]);
     setIsThinking(true);
 
     try {
-      // 2. SEND TO THE "BRAIN" (API ROUTE)
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -74,8 +67,6 @@ export default function RuntimeOS({ config, onExit }: RuntimeProps) {
 
       const data = await res.json();
 
-      // 3. ADD AI RESPONSE
-      // FIX: Unique ID
       const aiId = `${Date.now()}-ai`;
       setMessages(prev => [...prev, { id: aiId, type: 'AI', text: data.data }]);
     } catch (e) {
@@ -91,7 +82,6 @@ export default function RuntimeOS({ config, onExit }: RuntimeProps) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="w-full h-full flex flex-col relative z-50 pointer-events-auto"
     >
-      {/* STATUS BAR */}
       <div className="h-14 flex items-center justify-between px-8 border-b border-white/5 bg-black/20 backdrop-blur-md">
         <span className="text-[10px] font-mono text-white/40">{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
         <div className="flex gap-1.5">
@@ -102,17 +92,14 @@ export default function RuntimeOS({ config, onExit }: RuntimeProps) {
         </div>
       </div>
 
-      {/* --- CHAT STREAM --- */}
       <div className="flex-1 p-8 flex flex-col gap-6 overflow-y-auto no-scrollbar" ref={scrollRef}>
         
-        {/* HERO HEADER */}
         <div className="p-6 rounded-3xl border border-white/10 relative overflow-hidden shrink-0" style={{ backgroundColor: `${config.color}10` }}>
            <div className="absolute top-0 right-0 p-32 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
            <h2 className="text-3xl font-black text-white italic tracking-tighter relative z-10">{config.title}</h2>
            <p className="text-[9px] uppercase tracking-widest text-white/60 mt-2 relative z-10">{config.tagline}</p>
         </div>
 
-        {/* MESSAGES */}
         <div className="space-y-3">
            {messages.map((msg) => (
              <motion.div 
@@ -136,7 +123,6 @@ export default function RuntimeOS({ config, onExit }: RuntimeProps) {
              </motion.div>
            ))}
            
-           {/* THINKING INDICATOR */}
            {isThinking && (
                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-1 pl-4">
                    <div className="w-1 h-1 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
@@ -147,7 +133,6 @@ export default function RuntimeOS({ config, onExit }: RuntimeProps) {
         </div>
       </div>
 
-      {/* --- INPUT DECK --- */}
       <div className="p-6 border-t border-white/5 bg-black/40 backdrop-blur-md">
         <div className="flex gap-4">
             <input 

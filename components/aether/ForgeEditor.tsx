@@ -6,7 +6,6 @@ import { saveAs } from 'file-saver';
 import { Search, Lock, Zap, Sliders, Type, Database } from 'lucide-react'; 
 import { ProjectDNA } from '../../data/projects';
 
-// --- IMPORTS ---
 import { CENTURY_ARCHIVE, ThemePreset } from '../../data/AtmosphereRegistry';
 import AtmosphereEngine from './AtmosphereEngine';
 
@@ -15,12 +14,10 @@ const glassPanel = "bg-[#050505]/95 backdrop-blur-2xl border border-white/10 sha
 interface ForgeEditorProps { project: ProjectDNA; onClose: () => void; }
 
 export default function ForgeEditor({ project, onClose }: ForgeEditorProps) {
-  // --- STATE ---
   const [activePreset, setActivePreset] = useState<ThemePreset>(CENTURY_ARCHIVE[0]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'CONTROLS' | 'REGISTRY'>('REGISTRY');
   
-  // --- MANUAL OVERRIDES (THE FLIGHT DECK) ---
   const [customColor, setCustomColor] = useState(activePreset.color);
   const [customForce, setCustomForce] = useState(activePreset.config.force);
   const [customSpeed, setCustomSpeed] = useState(activePreset.config.speed);
@@ -28,12 +25,10 @@ export default function ForgeEditor({ project, onClose }: ForgeEditorProps) {
   const [customGlow, setCustomGlow] = useState(activePreset.config.glow);
   const [customRadius, setCustomRadius] = useState(activePreset.config.radius);
 
-  // --- CONTENT INJECTION ---
   const [customTitle, setCustomTitle] = useState(project.title);
   const [tagline, setTagline] = useState("AUTONOMOUS GENERATIVE ENTITY");
   const [btnText, setBtnText] = useState("BEGIN SESSION");
 
-  // Sync sliders when preset changes (but allow override)
   useEffect(() => {
     setCustomColor(activePreset.color);
     setCustomForce(activePreset.config.force);
@@ -47,7 +42,6 @@ export default function ForgeEditor({ project, onClose }: ForgeEditorProps) {
     return CENTURY_ARCHIVE.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [searchQuery]);
 
-  // --- EXPORT LOGIC ---
   const handleExport = async () => {
     try {
         const btn = document.getElementById('export-btn');
@@ -104,7 +98,6 @@ export default function NeuralGateway() {
         
         <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
 
-        {/* HEADER */}
         <div className={`h-16 ${glassPanel} flex items-center justify-between px-6 z-40 relative mt-4 mx-4 rounded-xl`}>
             <div className="flex items-center gap-4">
                 <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: customColor, boxShadow: `0 0 15px ${customColor}` }} />
@@ -115,10 +108,8 @@ export default function NeuralGateway() {
 
         <div className="flex-1 flex relative z-10 gap-4 p-4 overflow-hidden">
             
-            {/* --- LEFT: THE FLIGHT CONTROL DECK --- */}
             <div className={`w-[450px] ${glassPanel} rounded-3xl flex flex-col overflow-hidden`}>
                 
-                {/* TABS */}
                 <div className="flex border-b border-white/5">
                     <button 
                         onClick={() => setActiveTab('REGISTRY')}
@@ -134,7 +125,6 @@ export default function NeuralGateway() {
                     </button>
                 </div>
 
-                {/* --- TAB 1: REGISTRY (THE LIST) --- */}
                 {activeTab === 'REGISTRY' && (
                     <div className="flex-1 flex flex-col overflow-hidden">
                         <div className="p-4 border-b border-white/5 bg-white/5">
@@ -173,11 +163,9 @@ export default function NeuralGateway() {
                     </div>
                 )}
 
-                {/* --- TAB 2: CONTROLS (THE TOOLS) --- */}
                 {activeTab === 'CONTROLS' && (
                     <div className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-thin scrollbar-thumb-white/10">
                         
-                        {/* 1. TEXT INJECTION */}
                         <div className="space-y-4">
                             <label className="text-[9px] text-white/30 font-bold tracking-[0.3em] uppercase flex items-center gap-2">
                                 <Type className="w-3 h-3" /> Semantic Injection
@@ -197,7 +185,6 @@ export default function NeuralGateway() {
 
                         <div className="h-[1px] w-full bg-white/5" />
 
-                        {/* 2. PHYSICS ENGINE */}
                         <div className="space-y-6">
                             <label className="text-[9px] text-white/30 font-bold tracking-[0.3em] uppercase flex items-center gap-2">
                                 <Zap className="w-3 h-3" /> Physics Parameters
@@ -222,7 +209,6 @@ export default function NeuralGateway() {
 
                         <div className="h-[1px] w-full bg-white/5" />
 
-                        {/* 3. SPECTRAL KERNEL */}
                         <div>
                             <div className="flex justify-between items-center mb-4">
                                 <label className="text-[9px] text-white/30 font-bold tracking-[0.3em] uppercase">Spectral Kernel</label>
@@ -239,7 +225,6 @@ export default function NeuralGateway() {
                     </div>
                 )}
 
-                {/* EXPORT ACTION */}
                 <div className="p-6 border-t border-white/5 bg-black/40 mt-auto">
                     <button id="export-btn" onClick={handleExport} 
                             className="w-full py-4 bg-white text-black font-black text-[10px] tracking-[0.3em] rounded-xl hover:scale-[1.01] transition-all relative overflow-hidden group shadow-[0_0_20px_rgba(255,255,255,0.2)]">
@@ -249,7 +234,6 @@ export default function NeuralGateway() {
                 </div>
             </div>
 
-            {/* --- RIGHT: LIVE SIMULATION --- */}
             <div className={`flex-1 ${glassPanel} rounded-3xl relative overflow-hidden flex items-center justify-center`}>
                 <AtmosphereEngine 
                     preset={activePreset} 

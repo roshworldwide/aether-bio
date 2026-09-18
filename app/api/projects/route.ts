@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET: Fetch all projects from the Database
 export async function GET() {
   try {
     const projects = await prisma.project.findMany({
-      orderBy: { createdAt: 'desc' }, // Newest first
+      orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json(projects);
   } catch (error) {
@@ -14,7 +13,6 @@ export async function GET() {
   }
 }
 
-// POST: Create a new project in the Database
 export async function POST(req: Request) {
   try {
     const body = await req.json();

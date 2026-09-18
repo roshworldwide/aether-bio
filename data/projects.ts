@@ -1,12 +1,10 @@
-// data/projects.ts
-
 export interface ProjectDNA {
   id: string;
   title: string;
   category: 'NEURAL' | 'LEGAL' | 'CREATIVE' | 'SYSTEM';
   tagline: string;
   status: 'ACTIVE' | 'ARCHIVED' | 'ENCRYPTED';
-  accentColor: string; // Now used for luminosity intensity
+  accentColor: string;
   spec: {
     fontFamily: string;
     particleForce: number;
@@ -22,7 +20,7 @@ export const projects: ProjectDNA[] = [
     category: 'SYSTEM',
     tagline: 'Hyper-Threading Active',
     status: 'ACTIVE',
-    accentColor: '255, 255, 255', // Pure White
+    accentColor: '255, 255, 255',
     spec: { fontFamily: 'SF Pro Display', particleForce: 95, blurIntensity: '40px', hapticStrength: 15 }
   },
   {
@@ -31,7 +29,7 @@ export const projects: ProjectDNA[] = [
     category: 'LEGAL',
     tagline: 'Autonomous Defense Protocol',
     status: 'ACTIVE',
-    accentColor: '220, 220, 220', // Silver/Grey
+    accentColor: '220, 220, 220',
     spec: { fontFamily: 'SF Mono', particleForce: 80, blurIntensity: '60px', hapticStrength: 25 }
   }
 ];
